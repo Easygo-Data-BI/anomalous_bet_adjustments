@@ -3,7 +3,7 @@ import sys
 import logging
 from pathlib import Path
 
-import redshift_connector  # Use the native Redshift driver instead of SQLAlchemy
+import redshift_connector 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,13 +39,10 @@ def get_db_connection_and_table():
     """
     load_dotenv()
 
-    # Accept both REDSHIFT_DB and REDSHIFT_DATABASE for convenience
-    db_name_env = os.getenv("REDSHIFT_DB") or os.getenv("REDSHIFT_DATABASE")
-
     required_vars = {
         "REDSHIFT_HOST": os.getenv("REDSHIFT_HOST"),
         "REDSHIFT_PORT": os.getenv("REDSHIFT_PORT", "5439"),
-        "REDSHIFT_DATABASE": db_name_env,
+        "REDSHIFT_DATABASE": os.getenv("REDSHIFT_DB"),
         "REDSHIFT_USER": os.getenv("REDSHIFT_USER"),
         "REDSHIFT_PASSWORD": os.getenv("REDSHIFT_PASSWORD"),
         "REDSHIFT_TABLE": os.getenv("REDSHIFT_TABLE"),
@@ -63,7 +60,7 @@ def get_db_connection_and_table():
         conn = redshift_connector.connect(
             host=required_vars["REDSHIFT_HOST"],
             port=int(required_vars["REDSHIFT_PORT"]),
-            database=db_name_env,
+            database=required_vars["REDSHIFT_DB"],
             user=required_vars["REDSHIFT_USER"],
             password=required_vars["REDSHIFT_PASSWORD"],
         )
@@ -184,7 +181,6 @@ def main():
     """Main script to orchestrate the count-based EDA pipeline."""
 
     # --- DEFAULT CONFIGURATION ---
-    # The table name is now loaded from the .env file (as REDSHIFT_TABLE)
     SCHEMA_NAME = "public"
     OUTPUT_DIR = "count_analysis_reports"
     # -----------------------------

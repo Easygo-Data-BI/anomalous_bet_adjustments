@@ -229,10 +229,8 @@ def run_comparative_pattern_analysis(df: pd.DataFrame, output_dir: Path):
 
 def main():
     """Main script to orchestrate the count-based EDA pipeline."""
-    # --- DEFAULT CONFIGURATION ---
-    # All database config is now loaded from the .env file.
     OUTPUT_DIR = "filtered_count_reports"
-    # -----------------------------
+
 
     setup_logging()
     
@@ -240,10 +238,8 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     logging.info(f"Reports will be saved to: {output_dir.resolve()}")
 
-    # Get the database engine, table, and schema from the environment variables
     engine, table_name, schema_name = get_db_config()
 
-    # Load data using the retrieved configuration
     df = load_adjustment_data(engine, table_name, schema_name)
 
     # Execute all count-based analysis modules
